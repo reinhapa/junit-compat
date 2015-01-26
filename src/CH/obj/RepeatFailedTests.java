@@ -22,8 +22,10 @@ import junit.framework.TestSuite;
 /**
  * Helper class to execute all failed tests according the <tt>consoleText</tt> as defined in the system property <tt>error.log.url</tt> (be
  * defined with <tt>-Derror.log.url=&lt;url&gt;</tt>).
+ *
+ * @author Patrick Reinhart
  */
-public class RepeatFailedTests extends TestSuite {
+public class RepeatFailedTests {
 
   /**
    * @return the builded test suite based on the logfile containing the failed tests
@@ -47,7 +49,7 @@ public class RepeatFailedTests extends TestSuite {
                 String failures = resultMatcher.group(1);
                 String errors = resultMatcher.group(2);
                 if (!"0".equals(errors) || !"0".equals(failures)) {
-                  if (className.indexOf('/') < 0) { // filter out jython tests
+                  if (!className.contains("/")) { // filter out jython tests
                     try {
                       Class<?> failedClass = Class.forName(className);
                       if (TestCase.class.isAssignableFrom(failedClass)) {
