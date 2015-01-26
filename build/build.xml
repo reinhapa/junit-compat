@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="main">
+  <!-- *** START *** Bison standard includes! DO NOT MODIFY! -->
+  <property environment="env" />
+  <import file="${env.BS_HOME}/data/bs_builder/build_lib/bsAntTaskLibrary.xml"
+          optional="true" />
+  <import file="../../BuildEnvironment/build_lib/bsAntTaskLibrary.xml"
+          optional="true" />
+  <!-- **** END **** Bison standard includes! DO NOT MODIFY! -->
+  <property name="local.library.name" value="junit-compat" />
+
+  <target name="main"
+          depends="bs.global.init.frame, compile.runtime, compile.test, run.tests.coverage, jar.src, publish.all">
+    <bs.clean.workspace />
+  </target>
+
+  <target name="compile.runtime" depends="bs.global.init.frame">
+    <bs.ivy.resolve.retrieve configuration="compile.test" />
+    <bs.compile />
+    <bs.jar artifact.name="${local.library.name}"/>
+  </target>
+
+  <target name="compile.test" depends="bs.global.init.frame">
+    <bs.ivy.resolve.retrieve configuration="compile.test" />
+    <bs.compile.test />
+    <bs.jar.test artifact.name="${local.library.name}-test"/>
+  </target>
+  
+  <target name="run.tests.coverage"
+          depends="bs.global.init.frame, compile.runtime, compile.test">
+    <bs.ivy.resolve.retrieve configuration="runtime.test" />
+    <bs.test.coverage />
+  </target>
+
+  <target name="jar.src">
+    <bs.jar.src artifact.name="${local.library.name}-sources"/>
+  </target>
+
+  <target name="publish.all" depends="compile.runtime, jar.src">
+    <bs.ivy.publish configuration="*" />
+  </target>
+</project>
