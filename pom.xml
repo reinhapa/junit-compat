@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.reini</groupId>
   <artifactId>junit-compat</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>JUnit compatibility classes</name>
   <description>Provides partial backwards compatibility classes in order to more easier migrate to a newer JUnit version.</description>
   <url>https://github.com/reinhapa/junit-compat</url>
