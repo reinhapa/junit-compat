@@ -3,7 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.reini</groupId>
   <artifactId>junit-compat</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
   <build>
     <plugins>
       <plugin>
@@ -25,4 +35,7 @@
       <version>4.11</version>
     </dependency>
   </dependencies>
+  <name>JUnit compatibility classes</name>
+  <description>Provides partial backwards compatibility classes in order to more easier migrate to a newer JUnit version.</description>
+  <url>https://github.com/reinhapa/junit-compat</url>
 </project>
