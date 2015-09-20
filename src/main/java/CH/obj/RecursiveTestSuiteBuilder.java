@@ -43,9 +43,9 @@ public abstract class RecursiveTestSuiteBuilder {
   /**
    * Builds all recursive test suites starting in the directories of the given <code>classInPackages</code>
    * 
-   * @param classInPackages
-   * @param rootSuite
-   * @throws Exception
+   * @param classInPackages class array used to get those packages
+   * @param rootSuite the root test suite
+   * @throws Exception if the the suite could not be built
    */
   public static void build(Class<?>[] classInPackages, TestSuite rootSuite) throws Exception {
     for (Class<?> classInPackage : classInPackages) {
@@ -56,9 +56,9 @@ public abstract class RecursiveTestSuiteBuilder {
   /**
    * Builds all recursive test suites starting in the directory of the given <code>classInPackage</code>
    * 
-   * @param classInPackage
-   * @param rootSuite
-   * @throws Exception
+   * @param classInPackage specifies a class file to get the package for
+   * @param rootSuite the root test suite
+   * @throws Exception if the the suite could not be built
    */
   public static void build(Class<?> classInPackage, TestSuite rootSuite) throws Exception {
     String testSuiteClassName = classInPackage.getName();
@@ -73,12 +73,12 @@ public abstract class RecursiveTestSuiteBuilder {
   /**
    * Builds all recursive test suites for the given <code>rootSuite</code>
    * 
-   * @param prefixLength
-   * @param basePackage
-   * @param currentDir
-   * @param filter
-   * @param rootSuite
-   * @throws Exception
+   * @param prefixLength the length of the prefix
+   * @param basePackage the base package name
+   * @param currentDir the current directory
+   * @param filter a file name filter
+   * @param rootSuite the root test suite
+   * @throws Exception if the the suite could not be built
    */
   public static void build(int prefixLength, String basePackage, File currentDir, FilenameFilter filter, TestSuite rootSuite)
       throws Exception {

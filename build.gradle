@@ -1,0 +1,101 @@
+apply plugin: 'java'
+apply plugin: 'signing'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+group = 'net.reini'
+archivesBaseName = 'junit-compat'
+version = '1.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+defaultTasks 'build'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'junit:junit:4.+'
+}
+
+task sourcesJar(type: Jar) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+signing {
+    required { !project.version.contains('-SNAPSHOT') }
+    sign configurations.archives
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'JUnit compatibility classes',
+                   'Implementation-Version': version,
+                   'Built-By': System.getProperty('user.name'),
+                   'Built-Date': new Date(),
+                   'Built-JDK': System.getProperty('java.version'),
+                   'Built-Gradle': gradle.gradleVersion
+    }
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        beforeDeployment { 
+            MavenDeployment deployment -> signing.signPom(deployment)
+        }
+
+        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+            authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+
+        pom.project {
+            name 'JUnit compatibility classes'
+            packaging 'jar'
+            description 'Provides partial backwards compatibility classes in order to more easier migrate to a newer JUnit version.'
+            url 'https://github.com/reinhapa/junit-compat'
+            
+            scm {
+                connection 'scm:git:git@github.com:reinhapa/junit-compat.git'
+                developerConnection 'scm:git:git@github.com:reinhapa/junit-compat.git'
+                url 'git@github.com:reinhapa/junit-compat.git'
+            }
+
+			licenses {
+                license {
+                    name 'MIT License'
+                    url 'http://www.opensource.org/licenses/mit-license.php'
+                    distribution 'repo'
+                }
+			}
+
+            developers {
+                developer {
+                    id 'reinhapa'
+                    name 'Patrick Reinhart'
+                    email 'patrick@reini.net'
+                }
+            }
+        }
+    }
+}
