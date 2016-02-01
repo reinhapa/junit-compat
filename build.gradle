@@ -7,7 +7,7 @@ group = 'net.reini'
 archivesBaseName = 'junit-compat'
 version = '1.0.1-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 
 defaultTasks 'build'
 
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile 'junit:junit:4.+'
+    compile 'junit:junit:4.12'
 }
 
 task sourcesJar(type: Jar) {
