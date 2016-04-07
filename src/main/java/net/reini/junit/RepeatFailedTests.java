@@ -1,10 +1,10 @@
 /**
  * File Name: RepeatFailedTests.java
  * 
- * Copyright (c) 2014 BISON Schweiz AG, All Rights Reserved.
+ * Copyright (c) 2014 Patrick Reinhart, All Rights Reserved.
  */
 
-package CH.obj;
+package net.reini.junit;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -20,8 +20,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Helper class to execute all failed tests according the <tt>consoleText</tt> as defined in the system property <tt>error.log.url</tt> (be
- * defined with <tt>-Derror.log.url=&lt;url&gt;</tt>).
+ * Helper class to execute all failed tests according the <tt>consoleText</tt> as defined in the
+ * system property <tt>error.log.url</tt> (be defined with <tt>-Derror.log.url=&lt;url&gt;</tt>).
  *
  * @author Patrick Reinhart
  */
@@ -34,9 +34,11 @@ public class RepeatFailedTests {
     Logger logger = Logger.getLogger(RepeatFailedTests.class.getName());
     TestSuite suite = new TestSuite("Failed JUnit tests");
     for (String urlValue : System.getProperty("error.log.url", "").split(",")) {
-      try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(urlValue).openStream()))) {
+      try (BufferedReader reader =
+          new BufferedReader(new InputStreamReader(new URL(urlValue).openStream()))) {
         Pattern testNamePattern = Pattern.compile("\\[junit\\] Running (.+)$");
-        Pattern testResultPattern = Pattern.compile("\\[junit\\] Tests run: [0-9]+, Failures: ([0-9]+), Errors: ([0-9]+),");
+        Pattern testResultPattern =
+            Pattern.compile("\\[junit\\] Tests run: [0-9]+, Failures: ([0-9]+), Errors: ([0-9]+),");
         String line = null;
         while ((line = reader.readLine()) != null) {
           Matcher nameMatcher = testNamePattern.matcher(line);
@@ -54,13 +56,14 @@ public class RepeatFailedTests {
                       Class<?> failedClass = Class.forName(className);
                       if (TestCase.class.isAssignableFrom(failedClass)) {
                         @SuppressWarnings("unchecked")
-                        Class<TestCase> testCase = (Class<TestCase>)failedClass;
+                        Class<TestCase> testCase = (Class<TestCase>) failedClass;
                         suite.addTestSuite(testCase);
                       } else {
                         suite.addTest(new JUnit4TestAdapter(failedClass));
                       }
                     } catch (Exception e) {
-                      logger.severe(String.format("Unable to load class %s (%s)", className, e.getClass().getName()));
+                      logger.severe(String.format("Unable to load class %s (%s)", className,
+                          e.getClass().getName()));
                     }
                   } else {
                     logger.warning("Skipped Jython test ".concat(className));

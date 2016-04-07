@@ -4,9 +4,6 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 
 group = 'net.reini'
-archivesBaseName = 'junit-compat'
-
-sourceCompatibility = 1.7
 
 defaultTasks 'build'
 
@@ -33,14 +30,9 @@ artifacts {
     archives javadocJar
 }
 
-
 signing {
     required { !project.version.contains('-SNAPSHOT') }
     sign configurations.archives
-}
-
-test {
-    systemProperties 'property': 'value'
 }
 
 jar {
@@ -88,13 +80,18 @@ uploadArchives {
                 }
 			}
 
-            developers {
+            developers {[
                 developer {
                     id 'reinhapa'
                     name 'Patrick Reinhart'
                     email 'patrick@reini.net'
+                },
+                developer {
+                    id 'ohumbel'
+                    name 'Otmar Humbel'
+                    email 'ohumbel@gmail.com'
                 }
-            }
+            ]}
         }
     }
 }

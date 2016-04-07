@@ -1,19 +1,13 @@
-/**
- * File Name: PrivateAccessor.java
- * 
- * Copyright (c) 2014 BISON Schweiz AG, All Rights Reserved.
- */
-
 package junitx.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-@Deprecated
-public class PrivateAccessor {
+public final class PrivateAccessor {
 
-  public static Object invoke(Object object, String name, Class<?>[] argumentTypes, Object[] arguments) throws Throwable {
+  public static Object invoke(Object object, String name, Class<?>[] argumentTypes,
+      Object[] arguments) throws Throwable {
     if (object == null) {
       throw new IllegalArgumentException("Invalid null object argument");
     }
@@ -35,7 +29,8 @@ public class PrivateAccessor {
       }
       cls = cls.getSuperclass();
     }
-    throw new NoSuchMethodException("Failed method invocation: " + object.getClass().getName() + "." + name + "()");
+    throw new NoSuchMethodException(
+        "Failed method invocation: " + object.getClass().getName() + "." + name + "()");
   }
 
   public static Object getField(Object object, String name) throws NoSuchFieldException {
@@ -53,10 +48,12 @@ public class PrivateAccessor {
          */
       }
     }
-    throw new NoSuchFieldException("Could not get value for field " + object.getClass().getName() + "." + name);
+    throw new NoSuchFieldException(
+        "Could not get value for field " + object.getClass().getName() + "." + name);
   }
 
-  public static void setField(Object object, String name, Object value) throws NoSuchFieldException {
+  public static void setField(Object object, String name, Object value)
+      throws NoSuchFieldException {
     if (object == null) {
       throw new IllegalArgumentException("Invalid null object argument");
     }
@@ -72,6 +69,7 @@ public class PrivateAccessor {
          */
       }
     }
-    throw new NoSuchFieldException("Could set value for field " + object.getClass().getName() + "." + name);
+    throw new NoSuchFieldException(
+        "Could set value for field " + object.getClass().getName() + "." + name);
   }
 }
