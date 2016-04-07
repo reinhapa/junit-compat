@@ -1,10 +1,10 @@
 /**
  * File Name: RecursiveTestSuiteBuilder.java
  * 
- * Copyright (c) 2014 BISON Schweiz AG, All Rights Reserved.
+ * Copyright (c) 2014 Patrick Reinhart, All Rights Reserved.
  */
 
-package CH.obj;
+package net.reini.junit;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -41,7 +41,8 @@ public abstract class RecursiveTestSuiteBuilder {
   }
 
   /**
-   * Builds all recursive test suites starting in the directories of the given <code>classInPackages</code>
+   * Builds all recursive test suites starting in the directories of the given
+   * <code>classInPackages</code>
    * 
    * @param classInPackages class array used to get those packages
    * @param rootSuite the root test suite
@@ -54,7 +55,8 @@ public abstract class RecursiveTestSuiteBuilder {
   }
 
   /**
-   * Builds all recursive test suites starting in the directory of the given <code>classInPackage</code>
+   * Builds all recursive test suites starting in the directory of the given
+   * <code>classInPackage</code>
    * 
    * @param classInPackage specifies a class file to get the package for
    * @param rootSuite the root test suite
@@ -62,7 +64,8 @@ public abstract class RecursiveTestSuiteBuilder {
    */
   public static void build(Class<?> classInPackage, TestSuite rootSuite) throws Exception {
     String testSuiteClassName = classInPackage.getName();
-    File suiteFile = new File(classInPackage.getClassLoader().getResource(testSuiteClassName.replace('.', '/').concat(".class")).getFile());
+    File suiteFile = new File(classInPackage.getClassLoader()
+        .getResource(testSuiteClassName.replace('.', '/').concat(".class")).getFile());
     String basePackage = classInPackage.getPackage().getName();
     File baseDir = suiteFile.getParentFile();
     TestSuite suite = new TestSuite(basePackage);
@@ -80,13 +83,14 @@ public abstract class RecursiveTestSuiteBuilder {
    * @param rootSuite the root test suite
    * @throws Exception if the the suite could not be built
    */
-  public static void build(int prefixLength, String basePackage, File currentDir, FilenameFilter filter, TestSuite rootSuite)
-      throws Exception {
+  public static void build(int prefixLength, String basePackage, File currentDir,
+      FilenameFilter filter, TestSuite rootSuite) throws Exception {
     List<File> potentialDirectories = Arrays.asList(currentDir.listFiles(filter));
     if (!potentialDirectories.isEmpty()) {
       StringBuilder currentPackageName = new StringBuilder(200);
       currentPackageName.append(basePackage);
-      String replaced = currentDir.getAbsolutePath().substring(prefixLength).replaceAll("[\\\\|/]", ".");
+      String replaced =
+          currentDir.getAbsolutePath().substring(prefixLength).replaceAll("[\\\\|/]", ".");
       currentPackageName.append(replaced);
       List<File> classFiles = new ArrayList<>(potentialDirectories.size());
       Collections.sort(potentialDirectories, new FileComparator());
@@ -104,20 +108,22 @@ public abstract class RecursiveTestSuiteBuilder {
       }
       for (File file : classFiles) {
         final String fileName = file.getName().replaceFirst(".class$", "");
-        final String className = new StringBuilder(200).append(currentPackageName).append('.').append(fileName).toString();
+        final String className = new StringBuilder(200).append(currentPackageName).append('.')
+            .append(fileName).toString();
         try {
           Class<?> clazz = Class.forName(className);
           if (!Modifier.isAbstract(clazz.getModifiers())) {
             if (TestCase.class.isAssignableFrom(clazz)) {
               @SuppressWarnings("unchecked")
-              Class<? extends TestCase> testClass = (Class<? extends TestCase>)clazz;
+              Class<? extends TestCase> testClass = (Class<? extends TestCase>) clazz;
               rootSuite.addTestSuite(testClass);
             } else {
               rootSuite.addTest(new JUnit4TestAdapter(clazz));
             }
           }
         } catch (Throwable t) {
-          Logger.getLogger(RecursiveTestSuiteBuilder.class.getName()).log(Level.SEVERE, "Unable to load class ".concat(className), t);
+          Logger.getLogger(RecursiveTestSuiteBuilder.class.getName()).log(Level.SEVERE,
+              "Unable to load class ".concat(className), t);
         }
       }
     }

@@ -4,7 +4,6 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 
 group = 'net.reini'
-sourceCompatibility = 1.7
 
 defaultTasks 'build'
 

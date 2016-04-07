@@ -1,10 +1,10 @@
 /**
  * File Name: CustomTestSuite.java
  * 
- * Copyright (c) 2015 BISON Schweiz AG, All Rights Reserved.
+ * Copyright (c) 2015 Patrick Reinhart, All Rights Reserved.
  */
 
-package CH.obj;
+package net.reini.junit;
 
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.isRegularFile;
@@ -23,7 +23,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Helper class to execute all defined tests <tt>-Dcustom.tests=&lt;path_to_test_definition_file&gt;</tt>.
+ * Helper class to execute all defined tests
+ * <tt>-Dcustom.tests=&lt;path_to_test_definition_file&gt;</tt>.
  *
  * @author Patrick Reinhart
  */
@@ -45,13 +46,14 @@ public class CustomTestSuite {
               Class<?> failedClass = Class.forName(className);
               if (TestCase.class.isAssignableFrom(failedClass)) {
                 @SuppressWarnings("unchecked")
-                Class<TestCase> testCase = (Class<TestCase>)failedClass;
+                Class<TestCase> testCase = (Class<TestCase>) failedClass;
                 suite.addTestSuite(testCase);
               } else {
                 suite.addTest(new JUnit4TestAdapter(failedClass));
               }
             } catch (Exception e) {
-              logger.severe(String.format("Unable to load class %s (%s)", className, e.getClass().getName()));
+              logger.severe(
+                  String.format("Unable to load class %s (%s)", className, e.getClass().getName()));
             }
           } else {
             logger.warning("Skipped Jython test ".concat(className));
