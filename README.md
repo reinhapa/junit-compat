@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/reinhapa/junit-compat.svg)](https://travis-ci.org/reinhapa/junit-compat)
 [![MIT License](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com/reinhapa/junit-compat/blob/master/LICENSE)
 [![Supported Versions](https://img.shields.io/badge/Java-7%2C%208-blue.svg)](https://travis-ci.org/reinhapa/junit-compat)
+[![Build Status](http://reinharts.dyndns.org:8888/job/junit-compat/badge/icon)](http://reinharts.dyndns.org:8888/job/junit-compat/)
 
 # Provides partial backwards compatibility classes
 
