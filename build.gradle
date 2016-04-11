@@ -31,7 +31,7 @@ artifacts {
 }
 
 signing {
-    required { !project.version.contains('-SNAPSHOT') }
+    required { project.hasProperty('signing.password') && !project.version.contains('-SNAPSHOT') }
     sign configurations.archives
 }
 
@@ -47,6 +47,10 @@ jar {
 }
 
 uploadArchives {
+    if (!project.hasProperty('signing.password')) {
+        println "no archives will be uploaded due missing signing password"
+        return
+    }
     repositories.mavenDeployer {
         beforeDeployment { 
             MavenDeployment deployment -> signing.signPom(deployment)
