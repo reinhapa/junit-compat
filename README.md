@@ -8,6 +8,9 @@ This project contains some of the old JUnit classes that where removed in the ne
 of JUnit. Using this project besides the actual JUnit library can help migrate to a newer
 version more smoothly.
 
+## Contribute
+Contributions are always welcome. Use [Google code style format](https://google.github.io/styleguide/javaguide.html) for your changes. 
+
 # Enhanced provided helper classes
 Additional to the re-added removed JUnit 3 classes there are some additional helper classes
 building test suites:
