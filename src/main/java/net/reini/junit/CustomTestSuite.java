@@ -23,9 +23,25 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Helper class to execute all defined tests
- * <tt>-Dcustom.tests=&lt;path_to_test_definition_file&gt;</tt>.
- *
+ * Helper class to execute all defined tests.
+ * 
+ * The default behavior is to look for a `customtests` file in the current user directory.
+ * 
+ * In order specify a other custom file containing the test classes you could specify that using the 
+ * `custom.tests` system property:
+ * 
+ * `-Dcustom.tests=*dir/somefile*`
+ * 
+ * The content of the test definitions file contains one test class on each line without the
+ * `.class` suffix:
+ * 
+ * [source,xml,subs="verbatim,attributes"]
+ * ----
+ * # some comment
+ * net.reini.demo.SomeTest
+ * net.reini.demo.SomeOtherTest
+ * ----
+ * 
  * @author Patrick Reinhart
  */
 public class CustomTestSuite {
@@ -36,7 +52,13 @@ public class CustomTestSuite {
   public static Test suite() {
     Logger logger = Logger.getLogger(CustomTestSuite.class.getName());
     TestSuite suite = new TestSuite("Custom JUnit tests");
-    Path customTests = Paths.get(System.getProperty("custom.tests", ""));
+    String customTestFile = System.getProperty("custom.tests", "");
+    Path customTests;
+    if (customTestFile.isEmpty()) {
+      customTests = Paths.get(System.getProperty("user.dir"), "customtests");
+    } else {
+      customTests = Paths.get(customTestFile);
+    }
     if (exists(customTests) && isRegularFile(customTests)) {
       try (BufferedReader reader = newBufferedReader(customTests, StandardCharsets.ISO_8859_1)) {
         String className = null;

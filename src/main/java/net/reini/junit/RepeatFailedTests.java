@@ -20,15 +20,17 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Helper class to execute all failed tests according the <tt>consoleText</tt> as defined in the
- * system property <tt>error.log.url</tt> (be defined with <tt>-Derror.log.url=&lt;url&gt;</tt>).
+ * Helper class to execute all failed http://ant.apache.org[*ANT*] tests according the `consoleText` as 
+ * defined in the system property `error.log.url`. You can also specify multiple URLs using the comma (`,`).
+ * 
+ * `-Derror.log.url=http://jenkins.acme.com/job/myjob/lastBuild/consoleText`
  *
  * @author Patrick Reinhart
  */
 public class RepeatFailedTests {
 
   /**
-   * @return the builded test suite based on the logfile containing the failed tests
+   * @return the builded test suite based on the ANT log output containing the failed tests
    */
   public static Test suite() {
     Logger logger = Logger.getLogger(RepeatFailedTests.class.getName());
