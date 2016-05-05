@@ -8,7 +8,7 @@ image:https://img.shields.io/badge/Java-8-blue.svg["Supported Versions", link="h
 image:https://img.shields.io/travis/{project-full-path}/{github-branch}.svg["Build Status", link="https://travis-ci.org/{project-full-path}"]
 image:https://img.shields.io/codecov/c/github/{project-full-path}/{github-branch}.svg["Code Coverage", link="https://codecov.io/github/{project-full-path}?branch={github-branch}"]
 
-https://codecov.io/github/{project-full-path}/branch.svg?branch={github-branch}[codecov.io]
+image:https://codecov.io/github/{project-full-path}/branch.svg?branch={github-branch}[codecov.io]
 
 This project contains some of the old JUnit classes that where removed in the newer versions
 of JUnit. Using this project besides the actual JUnit library can help migrate to a newer
