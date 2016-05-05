@@ -85,6 +85,10 @@ jar {
                    'Specification-Title': project.name,
                    'Specification-Version': project.version,
                    'Specification-Vendor': 'reini.net'
+        metaInf {
+            from file('.')
+            include 'LICENSE'
+        }
     }
 }
 
