@@ -13,10 +13,7 @@ This project contains some of the old JUnit classes that where removed in the ne
 of JUnit. Using this project besides the actual JUnit library can help migrate to a newer
 version more smoothly.
 
-== Contribute
-Contributions are always welcome. Use https://google.github.io/styleguide/javaguide.html[Google code style format] for your changes. 
-
-=== Enhanced provided helper classes
+== Enhanced provided helper classes
 Additional to the re-added removed JUnit 3 classes there are some additional helper classes
 building test suites:
 
@@ -31,6 +28,9 @@ the failed tests and build it upon.
 === RecursiveTestSuite
 Creates a test suite based on a set of test class files as starting point using their the local
 file system location, searching recursively for more test classes that are added to the suite.
+
+== Contribute
+Contributions are always welcome. Use https://google.github.io/styleguide/javaguide.html[Google code style format] for your changes. 
 
 == License
 This project is licensed under the https://github.com/{project-full-path}/blob/{github-branch}/LICENSE[MIT license]
