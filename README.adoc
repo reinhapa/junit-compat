@@ -31,3 +31,6 @@ the failed tests and build it upon.
 === RecursiveTestSuite
 Creates a test suite based on a set of test class files as starting point using their the local
 file system location, searching recursively for more test classes that are added to the suite.
+
+== License
+This project is licensed under the https://github.com/{project-full-path}/blob/{github-branch}/LICENSE[MIT license]
