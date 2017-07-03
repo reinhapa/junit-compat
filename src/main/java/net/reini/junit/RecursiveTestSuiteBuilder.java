@@ -66,11 +66,13 @@ public abstract class RecursiveTestSuiteBuilder {
     String testSuiteClassName = classInPackage.getName();
     File suiteFile = new File(classInPackage.getClassLoader()
         .getResource(testSuiteClassName.replace('.', '/').concat(".class")).getFile());
-    String basePackage = classInPackage.getPackage().getName();
+    Package basePackage = classInPackage.getPackage();
+    String basePackageName = basePackage == null ? "" : basePackage.getName();
     File baseDir = suiteFile.getParentFile();
-    TestSuite suite = new TestSuite(basePackage);
+    String suiteName = basePackageName.isEmpty() ? "[default package]" : basePackageName;
+    TestSuite suite = new TestSuite(suiteName);
     rootSuite.addTest(suite);
-    build(baseDir.getAbsolutePath().length(), basePackage, baseDir, getFilenameFilter(), suite);
+    build(baseDir.getAbsolutePath().length(), basePackageName, baseDir, getFilenameFilter(), suite);
   }
 
   /**
@@ -89,8 +91,12 @@ public abstract class RecursiveTestSuiteBuilder {
     if (!potentialDirectories.isEmpty()) {
       StringBuilder currentPackageName = new StringBuilder(200);
       currentPackageName.append(basePackage);
-      String replaced =
-          currentDir.getAbsolutePath().substring(prefixLength).replaceAll("[\\\\|/]", ".");
+      String absolutePath = currentDir.getAbsolutePath();
+      int startIndex = prefixLength;
+      if (basePackage.isEmpty() && absolutePath.length() > prefixLength) {
+        startIndex = prefixLength + 1;
+      }
+      String replaced = absolutePath.substring(startIndex).replaceAll("[\\\\|/]", ".");
       currentPackageName.append(replaced);
       List<File> classFiles = new ArrayList<>(potentialDirectories.size());
       Collections.sort(potentialDirectories, new FileComparator());
@@ -108,8 +114,13 @@ public abstract class RecursiveTestSuiteBuilder {
       }
       for (File file : classFiles) {
         final String fileName = file.getName().replaceFirst(".class$", "");
-        final String className = new StringBuilder(200).append(currentPackageName).append('.')
-            .append(fileName).toString();
+        final String className;
+        if (currentPackageName.length() == 0) {
+          className = fileName;
+        } else {
+          className = new StringBuilder(200).append(currentPackageName).append('.').append(fileName)
+              .toString();
+        }
         try {
           Class<?> clazz = Class.forName(className);
           if (!Modifier.isAbstract(clazz.getModifiers())) {
