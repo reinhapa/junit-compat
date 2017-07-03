@@ -1,4 +1,4 @@
-package net.reini.junit;
+
 
 import static org.junit.Assert.assertTrue;
 
@@ -8,6 +8,11 @@ import java.util.List;
 import org.junit.Test;
 
 import junit.framework.TestSuite;
+import junit.swingui.TestRunnerTest;
+import junitx.framework.AssertTest;
+import junitx.util.PrivateAccessorTest;
+import net.reini.junit.NetReiniJunitTest;
+import net.reini.junit.RecursiveTestSuiteBuilder;
 import net.reini.junit.pkg1.NetReiniJunitPkg1_FirstTest;
 import net.reini.junit.pkg1.NetReiniJunitPkg1_SecondTest;
 import net.reini.junit.pkg2.NetReiniJunitPkg2Test;
@@ -15,13 +20,17 @@ import net.reini.junit.pkg2.NetReiniJunitPkg2Test;
 public class RecursiveTestSuiteBuilderTest {
 
   @Test
-  public void testNonEmptyPackage() throws Exception {
-    // a list of expected test classes, depth first
+  public void testDefaultPackage() throws Exception {
+    // a list of expected test classes
     List<Class<?>> testClasses = new ArrayList<>();
+    testClasses.add(TestRunnerTest.class);
+    testClasses.add(AssertTest.class);
+    testClasses.add(PrivateAccessorTest.class);
     testClasses.add(NetReiniJunitPkg1_FirstTest.class);
     testClasses.add(NetReiniJunitPkg1_SecondTest.class);
     testClasses.add(NetReiniJunitPkg2Test.class);
     testClasses.add(NetReiniJunitTest.class);
+    testClasses.add(DefaultPackageTest.class);
     testClasses.add(RecursiveTestSuiteBuilderTest.class);
 
     // build the suite
@@ -30,7 +39,7 @@ public class RecursiveTestSuiteBuilderTest {
 
     // walk the suite, removing every encountered test class
     walkSuite(rootSuite, testClasses);
-    assertTrue(testClasses.isEmpty());
+    assertTrue("test classes not in the suite: " + testClasses, testClasses.isEmpty());
   }
 
 
@@ -43,7 +52,7 @@ public class RecursiveTestSuiteBuilderTest {
         walkSuite((TestSuite) test, testClasses);
       } else {
         Class<?> testClass = Class.forName(test.toString());
-        assertTrue(testClasses.contains(testClass));
+        assertTrue("unexpected test class " + testClass.getName(), testClasses.contains(testClass));
         testClasses.remove(testClass);
       }
     }
