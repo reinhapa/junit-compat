@@ -11,6 +11,7 @@ import junit.framework.TestSuite;
 import junit.swingui.TestRunnerTest;
 import junitx.framework.AssertTest;
 import junitx.util.PrivateAccessorTest;
+import net.reini.junit.CustomTestSuiteTest;
 import net.reini.junit.NetReiniJunitTest;
 import net.reini.junit.RecursiveTestSuiteBuilder;
 import net.reini.junit.pkg1.NetReiniJunitPkg1_FirstTest;
@@ -26,10 +27,11 @@ public class RecursiveTestSuiteBuilderTest {
     testClasses.add(TestRunnerTest.class);
     testClasses.add(AssertTest.class);
     testClasses.add(PrivateAccessorTest.class);
+    testClasses.add(CustomTestSuiteTest.class);
+    testClasses.add(NetReiniJunitTest.class);
     testClasses.add(NetReiniJunitPkg1_FirstTest.class);
     testClasses.add(NetReiniJunitPkg1_SecondTest.class);
     testClasses.add(NetReiniJunitPkg2Test.class);
-    testClasses.add(NetReiniJunitTest.class);
     testClasses.add(DefaultPackageTest.class);
     testClasses.add(RecursiveTestSuiteBuilderTest.class);
 
