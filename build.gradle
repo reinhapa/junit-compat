@@ -80,7 +80,8 @@ jar {
                    'Build-Revision': versioning.info.commit,
                    'Specification-Title': project.name,
                    'Specification-Version': project.version,
-                   'Specification-Vendor': 'reini.net'
+                   'Specification-Vendor': 'reini.net',
+                   'Automatic-Module-Name': "net.reini.junit"
         metaInf {
             from file('.')
             include 'LICENSE'
