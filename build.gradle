@@ -1,13 +1,13 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id "java"
-    id "signing"
-    id "eclipse"
-    id "jacoco"
-    id "maven"
-    id "org.asciidoctor.convert" version "1.5.7"
-    id "net.nemerosa.versioning" version "2.7.1"
+    id 'java'
+    id 'signing'
+    id 'eclipse'
+    id 'jacoco'
+    id 'maven-publish'
+    id 'org.asciidoctor.convert' version '1.5.7'
+    id 'net.nemerosa.versioning' version '2.7.1'
 }
 
 defaultTasks 'build'
@@ -54,7 +54,7 @@ artifacts {
 }
 
 signing {
-    required { project.hasProperty('signing.password') && !project.version.contains('-SNAPSHOT') }
+    required { project.hasProperty('signing.password') && !project.version.endsWith('-SNAPSHOT') }
     sign configurations.archives
 }
 
@@ -62,13 +62,9 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'JUnit compatibility classes',
                    'Implementation-Version': version,
-                   'Created-By': "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString(),
                    'Build-Date': buildDate,
                    'Build-Time': buildTime,
                    'Build-Revision': versioning.info.commit,
-                   'Specification-Title': project.name,
-                   'Specification-Version': project.version,
-                   'Specification-Vendor': 'reini.net',
                    'Automatic-Module-Name': "net.reini.junit"
         metaInf {
             from file('.')
@@ -96,58 +92,52 @@ javadoc {
             "title-link=http://github.com/reinhapa/[${project.name} ${project.version}]"
 }
 
-uploadArchives {
-    if (!project.hasProperty('signing.password')) {
-        println "no archives will be uploaded due missing signing password"
-        return
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'JUnit compatibility classes'
+                description = 'Provides partial backwards compatibility classes in order to more easier migrate to a newer JUnit version.'
+                url = 'https://github.com/reinhapa/junit-compat'
+                scm {
+                    connection = 'scm:git:git@github.com:reinhapa/junit-compat.git'
+                    developerConnection = 'scm:git:git@github.com:reinhapa/junit-compat.git'
+                    url = 'https://github.com/reinhapa/junit-compat.git'
+                }
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                        distribution = 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'reinhapa'
+                        name = 'Patrick Reinhart'
+                        email = 'patrick@reini.net'
+                    }
+                    developer {
+                        id = 'ohumbel'
+                        name = 'Otmar Humbel'
+                        email = 'ohumbel@gmail.com'
+                    }
+                }
+            }
+        }
     }
-    repositories.mavenDeployer {
-        beforeDeployment { 
-            MavenDeployment deployment -> signing.signPom(deployment)
-        }
-
-        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-            authentication(userName: ossrhUsername, password: ossrhPassword)
-            //proxy(host: '127.0.0.1', port: 3128, type: "http")
-        }
-
-        snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-            authentication(userName: ossrhUsername, password: ossrhPassword)
-            //proxy(host: '127.0.0.1', port: 3128, type: "http")
-        }
-
-        pom.project {
-            name 'JUnit compatibility classes'
-            packaging 'jar'
-            description 'Provides partial backwards compatibility classes in order to more easier migrate to a newer JUnit version.'
-            url 'https://github.com/reinhapa/junit-compat'
-            
-            scm {
-                connection 'scm:git:git@github.com:reinhapa/junit-compat.git'
-                developerConnection 'scm:git:git@github.com:reinhapa/junit-compat.git'
-                url 'https://github.com/reinhapa/junit-compat.git'
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
             }
-
-            licenses {
-                license {
-                    name 'MIT License'
-                    url 'http://www.opensource.org/licenses/mit-license.php'
-                    distribution 'repo'
-                }
-            }
-
-            developers {[
-                developer {
-                    id 'reinhapa'
-                    name 'Patrick Reinhart'
-                    email 'patrick@reini.net'
-                },
-                developer {
-                    id 'ohumbel'
-                    name 'Otmar Humbel'
-                    email 'ohumbel@gmail.com'
-                }
-            ]}
         }
     }
 }
