@@ -31,10 +31,15 @@ asciidoctorj {
     version '1.5.5'
 }
 
+configurations {
+    jmockit
+    testCompile.extendsFrom jmockit
+}
+
 dependencies {
     compile "junit:junit:4.12"
+    jmockit "org.jmockit:jmockit:1.47"
     testCompile "org.hamcrest:hamcrest-core:2.1"
-    testCompile "org.jmockit:jmockit:1.47"
     testCompile "org.easymock:easymock:4.0.2"
     asciidoclet 'org.asciidoctor:asciidoclet:1.+'
 }
@@ -79,6 +84,12 @@ jacocoTestReport {
         xml.enabled = true
         html.enabled = true
     }
+}
+
+test {
+    jvmArgumentProviders.add (
+        { -> ["-javaagent:${configurations.jmockit.filter{ f -> f.getName().startsWith('jmockit')}.singleFile.absolutePath}"] } as CommandLineArgumentProvider
+    )
 }
 
 check.dependsOn jacocoTestReport

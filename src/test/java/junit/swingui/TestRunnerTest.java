@@ -1,14 +1,12 @@
 package junit.swingui;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import junit.framework.TestCase;
+import mockit.Expectations;
 import mockit.Mocked;
-import mockit.StrictExpectations;
-import mockit.integration.junit4.JMockit;
 
-@RunWith(JMockit.class)
+
 public class TestRunnerTest {
   @Mocked
   junit.textui.TestRunner testRunner;
@@ -21,7 +19,7 @@ public class TestRunnerTest {
   @Test
   public void testMain() {
     String[] args = new String[] {"arg1", "arg2"};
-    new StrictExpectations() {
+    new Expectations() {
       {
         junit.textui.TestRunner.main(args);
       }
@@ -37,7 +35,7 @@ public class TestRunnerTest {
 
   @Test
   public void testRun() {
-    new StrictExpectations() {
+    new Expectations() {
       {
         junit.textui.TestRunner.run(TestCase.class);
       }
