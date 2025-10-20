@@ -38,7 +38,7 @@ configurations {
 
 dependencies {
     implementation "junit:junit:4.13.2"
-    jmockit "org.jmockit:jmockit:1.49"
+    jmockit "org.jmockit:jmockit:1.50"
     testImplementation "org.hamcrest:hamcrest-core:2.2"
     testImplementation "org.easymock:easymock:4.3"
     asciidoclet 'org.asciidoctor:asciidoclet:1.5.6'
