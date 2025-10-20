@@ -24,47 +24,44 @@
 
 package junit.swingui;
 
-import org.junit.Test;
 
 import junit.framework.TestCase;
-import mockit.Expectations;
-import mockit.Mocked;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoSettings;
 
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 
+@MockitoSettings
 public class TestRunnerTest {
-  @Mocked
-  junit.textui.TestRunner testRunner;
+  @Mock
+  MockedStatic<junit.textui.TestRunner> testRunner;
 
   @Test
-  public void testTestRunner() {
-    new TestRunner();
+  void testTestRunner() {
+    assertThatNoException().isThrownBy(TestRunner::new);
   }
 
   @Test
-  public void testMain() {
+  void testMain() {
     String[] args = new String[] {"arg1", "arg2"};
-    new Expectations() {
-      {
-        junit.textui.TestRunner.main(args);
-      }
-    };
 
-    TestRunner.main(args);
-  }
+    assertThatNoException().isThrownBy(() -> TestRunner.main(args));
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testRun_noTestCaseClass() {
-    TestRunner.run(Object.class);
+    testRunner.verify(() -> junit.textui.TestRunner.main(args));
   }
 
   @Test
-  public void testRun() {
-    new Expectations() {
-      {
-        junit.textui.TestRunner.run(TestCase.class);
-      }
-    };
+  void testRun_noTestCaseClass() {
+    assertThatIllegalArgumentException().isThrownBy(() -> TestRunner.run(Object.class));
+  }
 
-    TestRunner.run(TestCase.class);
+  @Test
+  void testRun() {
+    assertThatNoException().isThrownBy(() -> TestRunner.run(TestCase.class));
+
+    testRunner.verify(() -> junit.textui.TestRunner.run(TestCase.class));
   }
 }

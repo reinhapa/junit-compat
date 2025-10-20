@@ -1,23 +1,14 @@
-import java.text.SimpleDateFormat
-
 plugins {
     id 'java'
     id 'signing'
     id 'eclipse'
     id 'jacoco'
     id 'maven-publish'
-    id 'com.github.ben-manes.versions' version '0.53.0'
     id 'org.asciidoctor.jvm.convert' version '4.0.5'
     id 'net.nemerosa.versioning' version '3.1.0'
 }
 
 defaultTasks 'build'
-
-Date buildTimeAndDate = new Date()
-ext {
-    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
-}
 
 configurations {
     asciidoclet
@@ -27,36 +18,25 @@ repositories {
     mavenCentral()
 }
 
+java {
+  sourceCompatibility = JavaVersion.VERSION_25
+  withJavadocJar()
+  withSourcesJar()
+}
+
 asciidoctorj { 
     version '1.5.5'
 }
 
-configurations {
-    jmockit
-    testImplementation.extendsFrom jmockit
-}
-
 dependencies {
-    implementation "junit:junit:4.13.2"
-    jmockit "org.jmockit:jmockit:1.50"
-    testImplementation "org.hamcrest:hamcrest-core:3.0"
-    testImplementation "org.easymock:easymock:5.6.0"
     asciidoclet 'org.asciidoctor:asciidoclet:2.0.0'
-}
-
-task sourcesJar(type: Jar) {
-    classifier 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+    implementation 'junit:junit:4.13.2'
+    testImplementation 'org.assertj:assertj-core:3.27.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:6.0.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.20.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.0.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-runner:1.14.0'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:6.0.0'
 }
 
 signing {
@@ -68,8 +48,6 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'JUnit compatibility classes',
                    'Implementation-Version': version,
-                   'Build-Date': buildDate,
-                   'Build-Time': buildTime,
                    'Build-Revision': versioning.info.commit,
                    'Automatic-Module-Name': "net.reini.junit"
         metaInf {
@@ -81,40 +59,26 @@ jar {
 
 jacocoTestReport {
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
 
 test {
-    jvmArgumentProviders.add (
-        { -> ["-javaagent:${configurations.jmockit.filter{ f -> f.getName().startsWith('jmockit')}.singleFile.absolutePath}"] } as CommandLineArgumentProvider
-    )
+    finalizedBy jacocoTestReport
+    useJUnitPlatform()
 }
 
 check.dependsOn jacocoTestReport
 
 javadoc {
-    options.docletpath = configurations.asciidoclet.files.asType(List)
-    options.doclet = 'org.asciidoctor.Asciidoclet'
-    options.addStringOption "-base-dir", "${projectDir}"
-    options.addStringOption "-attribute",
-            "name=${project.name}," +
-            "version=${project.version}," +
-            "title-link=http://github.com/reinhapa/[${project.name} ${project.version}]"
-}
-
-dependencyUpdates.resolutionStrategy {
-    componentSelection { rules ->
-        rules.all { ComponentSelection selection ->
-            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'pr', 'preview'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
+//    options.docletpath = configurations.asciidoclet.files.asType(List)
+//    options.doclet = 'org.asciidoctor.asciidoclet.Asciidoclet'
+//    options.addStringOption "-base-dir", "${projectDir}"
+//    options.addStringOption "-attribute",
+//            "name=${project.name}," +
+//            "version=${project.version}," +
+//            "title-link=http://github.com/reinhapa/[${project.name} ${project.version}]"
 }
 
 publishing {
